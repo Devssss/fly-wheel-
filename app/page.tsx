@@ -25,7 +25,9 @@ export default function SpinWheelPage() {
     { id: 1, address: '0x4a...f21', amount: '+0.50 ETH' },
     { id: 2, address: '0x91...cc4', amount: '+2.00 ETH', highlight: true },
     { id: 3, address: '0xde...90a', amount: '+0.05 ETH' },
-    { id: 4, address: '0xbc...112', amount: '+0.10 ETH' }
+    { id: 4, address: '0xbc...112', amount: '+0.10 ETH' },
+    { id: 5, address: '0x7e...33d', amount: '+1.50 ETH', highlight: true },
+    { id: 6, address: '0x21...88a', amount: '+0.25 ETH' }
   ])
   
   const controls = useAnimation()
@@ -113,10 +115,13 @@ export default function SpinWheelPage() {
                   <h3 className="text-[11px] uppercase tracking-[0.2em] text-white/60 border-b border-white/10 pb-2 flex items-center gap-2">
                     <History className="w-3 h-3" /> Recent Beneficiaries
                   </h3>
-                  <div className="space-y-3">
+                  <div className="space-y-3 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
                     {history.map((item) => (
-                      <div key={item.id} className="flex justify-between items-center text-sm">
-                        <span className="text-white/40 font-mono">{item.address}</span>
+                      <div key={item.id} className="flex justify-between items-center text-sm py-1 border-b border-white/5 last:border-0">
+                        <div className="flex flex-col">
+                          <span className="text-white/40 font-mono text-xs">{item.address}</span>
+                          <span className="text-[10px] text-white/20 uppercase">Spin #0{120 - item.id}</span>
+                        </div>
                         <span className={`font-serif text-lg ${item.highlight ? 'text-[#0052FF]' : ''}`}>
                           {item.amount}
                         </span>
