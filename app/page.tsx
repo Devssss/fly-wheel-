@@ -215,7 +215,7 @@ export default function SpinWheelPage() {
                   className="group relative px-12 md:px-16 py-4 md:py-5 bg-[#0052FF] text-white rounded-full font-bold uppercase tracking-[0.2em] text-sm shadow-[0_10px_40px_rgba(0,82,255,0.3)] hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   <span className="relative z-10">
-                    {isSpinning ? 'Wheel is in motion...' : 'Release the Wheel'}
+                    {isSpinning ? 'Wheel is in motion...' : 'Spin Now'}
                   </span>
                   <div className="absolute inset-0 bg-white/20 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
                 </button>
