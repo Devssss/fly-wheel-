@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "description": "",
+  "name": "BaseSpin",
+  "description": "A sophisticated on-chain spin wheel experience on the Base network.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }
