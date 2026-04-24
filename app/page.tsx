@@ -21,6 +21,7 @@ export default function SpinWheelPage() {
   const { data: balance } = useBalance({ address })
   const [isSpinning, setIsSpinning] = useState(false)
   const [rotation, setRotation] = useState(0)
+  const [betAmount, setBetAmount] = useState('0.05')
   const [history, setHistory] = useState([
     { id: 1, address: '0x4a...f21', amount: '+0.50 ETH' },
     { id: 2, address: '0x91...cc4', amount: '+2.00 ETH', highlight: true },
@@ -30,6 +31,13 @@ export default function SpinWheelPage() {
     { id: 6, address: '0x21...88a', amount: '+0.25 ETH' }
   ])
   
+  const numBet = parseFloat(betAmount)
+  const error = isNaN(numBet) || numBet <= 0 
+    ? 'Bet must be a positive number' 
+    : balance && numBet > parseFloat(balance.formatted)
+      ? 'Insufficient balance'
+      : null
+
   const controls = useAnimation()
 
   useEffect(() => {
@@ -115,13 +123,10 @@ export default function SpinWheelPage() {
                   <h3 className="text-[11px] uppercase tracking-[0.2em] text-white/60 border-b border-white/10 pb-2 flex items-center gap-2">
                     <History className="w-3 h-3" /> Recent Beneficiaries
                   </h3>
-                  <div className="space-y-3 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
+                  <div className="space-y-3">
                     {history.map((item) => (
-                      <div key={item.id} className="flex justify-between items-center text-sm py-1 border-b border-white/5 last:border-0">
-                        <div className="flex flex-col">
-                          <span className="text-white/40 font-mono text-xs">{item.address}</span>
-                          <span className="text-[10px] text-white/20 uppercase">Spin #0{120 - item.id}</span>
-                        </div>
+                      <div key={item.id} className="flex justify-between items-center text-sm">
+                        <span className="text-white/40 font-mono">{item.address}</span>
                         <span className={`font-serif text-lg ${item.highlight ? 'text-[#0052FF]' : ''}`}>
                           {item.amount}
                         </span>
@@ -210,20 +215,38 @@ export default function SpinWheelPage() {
             <div className="mt-8 md:mt-12 flex flex-col items-center gap-6">
               <div className="flex flex-col md:flex-row items-center gap-6 md:gap-16">
                 <div className="text-center">
-                  <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">Cost per turn</p>
-                  <p className="text-2xl font-serif">0.05 ETH</p>
+                  <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">Bet Amount (ETH)</p>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={betAmount}
+                    onChange={(e) => setBetAmount(e.target.value)}
+                    className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-xl font-serif text-center w-32 focus:border-[#0052FF] outline-none transition-colors"
+                  />
                 </div>
                 
-                <button 
-                  onClick={handleSpin}
-                  disabled={isSpinning || !isConnected}
-                  className="group relative px-12 md:px-16 py-4 md:py-5 bg-[#0052FF] text-white rounded-full font-bold uppercase tracking-[0.2em] text-sm shadow-[0_10px_40px_rgba(0,82,255,0.3)] hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                >
-                  <span className="relative z-10">
-                    {isSpinning ? 'Wheel is in motion...' : 'Spin Now'}
-                  </span>
-                  <div className="absolute inset-0 bg-white/20 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
-                </button>
+                <div className="flex flex-col items-center gap-2">
+                  <button 
+                    onClick={handleSpin}
+                    disabled={isSpinning || !isConnected || !!error || !betAmount}
+                    className="group relative px-12 md:px-16 py-4 md:py-5 bg-[#0052FF] text-white rounded-full font-bold uppercase tracking-[0.2em] text-sm shadow-[0_10px_40px_rgba(0,82,255,0.3)] hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  >
+                    <span className="relative z-10">
+                      {isSpinning ? 'Wheel is in motion...' : 'Spin Now'}
+                    </span>
+                    <div className="absolute inset-0 bg-white/20 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                  </button>
+                  {error && (
+                    <motion.p 
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-500 text-[10px] uppercase tracking-widest font-bold"
+                    >
+                      {error}
+                    </motion.p>
+                  )}
+                </div>
 
                 <div className="text-center">
                   <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">Wallet Balance</p>
